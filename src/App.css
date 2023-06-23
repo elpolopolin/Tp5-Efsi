@@ -41,3 +41,55 @@
     transform: rotate(360deg);
   }
 }
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  align-items: center;
+  background-color: white;
+  width: 30%;
+  height: 30%;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.modal-content  {
+  font-size: large;
+  color: black;
+}
+
+.lol {
+  font-size: x-large;
+  color: black;
+}
+
+.modal-content p {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.modal-content button {
+  margin-top: 60px;
+  width: 30%;
+}
+
+.centrado {
+  position: fixed;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
