@@ -11,13 +11,21 @@ function App() {
   const [handleIniciar, setHandleIniciar] = useState(false);
   const [rValue, setRValue] = useState(null);
   const [inputValue, setInputValue] = useState("");
+  const [inputValue2, setInputValue2] = useState("");
   const [puntos, setPuntos] = useState(0);
   const [timer, setTimer] = useState(15);
   const [ayudaVisible, setAyudaVisible] = useState(false);
+  const [mal, setMal] = useState("");
+  const [handleNombre, setHandleNombre] = useState(false)
+  const [nombre, setNombre] = useState("");
 
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
+  const handleInputChange2 = (event) => {
+    setInputValue2(event.target.value);
+  };
+
 
   const CargarBanderas = async () => {
     axios
@@ -34,9 +42,10 @@ function App() {
 
   const cargarRandom = () => {
     setInputValue("");
+    setMal("");
     var rand = Math.floor(Math.random()*paises.length);
     setRValue(paises[rand]);
-    console.log(paises[rand]);
+    console.log(paises[rand].name);
     setHandleIniciar(true);
     setTimer(15);
   }
@@ -45,6 +54,7 @@ function App() {
     console.log(input)
     if (input.toLowerCase() == rValue.name.toLowerCase()){
       cargarRandom();
+      setMal("");
       if (timer > 10){
         setPuntos(puntos + 2);
       }
@@ -55,7 +65,9 @@ function App() {
         setPuntos(puntos + 0.5);
       }
     }
-    else { }
+    else { 
+      setMal("Incorrecto");
+    }
   }
 
   const ayuda = () => {
@@ -80,38 +92,66 @@ function App() {
     }
   }, [handleIniciar, timer]);
 
+    const Ingreso = (e) => {
+      setHandleNombre(true)
+      setNombre(e)
+    }
+
 
 
   return (
     <div className="App">
-
       <div className="container ">
         {!handleIniciar && ( //Inicio Juego
         <div>
           <header>
           </header>
           <div className='centrado '>
-          <button className='btn btn-light' onClick={() => cargarRandom()}>Comenzar juego</button>
-        <BrowserRouter>
+          <BrowserRouter>
+          <Link to='/'><button className='btn btn-light' onClick={() => cargarRandom()}>Comenzar juego</button></Link> 
         <Link to='/paises'> <button className='btn btn-secondary' >Ver Paises</button> </Link> 
+
           <Routes>
             <Route path='/paises' element={<Paises paises={paises}/>} />
+            <Route path='/' element={<></>} />
           </Routes>
           </BrowserRouter>
             
               </div>
         </div>
         )}
-      {handleIniciar && (                        //Juego
-          <div>
+
+      {handleIniciar && (  
+        <div>
+        {!handleNombre && (
+          
+        <div className='centrado'>
+          <form onSubmit={() => Ingreso(inputValue2)}>
+          <input value={inputValue2} onChange={handleInputChange2} placeholder='Nombre'></input>
+          </form>
+        </div>
+        )}
+
+        {handleNombre && (                     
+          <div className='container'>
             <b className='text-white'>Puntos: </b> <p className='text-white'>{puntos}</p> <p className="text-danger">Tiempo Restante: {timer} segundos</p>
-            <br></br>
-            <img src={rValue.flag} style={{height: "500px", width: "auto"}} />
-            <p className='text-white'>Ingrese el nombre del pais:</p>
-            <button onClick={() => ayuda()} className='btn btn-primary'>Ayuda</button> <input value={inputValue} onChange={handleInputChange}></input> <button onClick={() => cargarRandom()} className='btn btn-danger'>Saltar</button><button onClick={() => verificar(inputValue)} className='btn btn-success'>Ok</button> 
+          
             
-              
-            {ayudaVisible && (
+            <div className='' style={{height:"500px", width:"auto"}}>
+              <img src={rValue.flag} className='h-100 mw-100 ' />
+              <br></br> 
+              <b className='text-danger mt-1'>{mal}</b>
+            </div>
+            <br></br>
+            <div className='mt-2'>
+              <b className='mt-4 mr-4 text-white '>Ingrese el nombre del pais:</b>
+              <button onClick={() => ayuda()} className='btn btn-primary'>Ayuda</button>
+              <input value={inputValue} onChange={handleInputChange}></input>
+                <button onClick={() => cargarRandom()} className='btn btn-danger'>Saltar</button>
+                <button onClick={() => verificar(inputValue)} className='btn btn-success'>Ok</button>
+            </div>                 
+
+            { ayudaVisible && (
               <div className="modal">
                 <div className="modal-content">
                   <b className=''>Ayuda</b>
@@ -129,10 +169,15 @@ function App() {
                   </button>
                 </div>
               </div>
-            )}
+              
+              )}
             
           </div>
-      )}
+        )}
+         
+     </div>
+         
+     )}
     </div>
     </div>
     );
